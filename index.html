@@ -1,0 +1,2528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DesignBHK Marketplace | Connect with Experts & Shop for Your Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Leaflet.js CSS for Interactive Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #069A8E; /* Teal */
+            --primary-dark: #058a7e;
+            --secondary: #F7FF93; /* Pale Yellow */
+            --accent: #005555; /* Dark Teal */
+            --light: #f5fcfb; /* Very Light Teal */
+            --dark: #005555; /* Dark Teal for text */
+            --gray: #6c757d;
+            --light-gray: #A1E3D8; /* Light Teal */
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark);
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #eef585;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            background-color: var(--light);
+            padding: 8px 0;
+            font-size: 14px;
+            text-align: center;
+            color: var(--dark);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            color: var(--accent);
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 32px;
+            color: var(--primary);
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border-radius: 30px;
+            border: 1px solid var(--light-gray);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            background-color: var(--light);
+            color: var(--dark);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .header-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .header-btn i {
+            font-size: 16px;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--secondary);
+            color: var(--dark);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .wishlist-icon {
+            position: relative;
+        }
+
+        .wishlist-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--secondary);
+            color: var(--dark);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .language-switcher {
+            padding: 5px 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Navigation Menu */
+        .main-nav {
+            background-color: var(--accent);
+            padding: 10px 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        /* Categories Page */
+        .categories-page {
+            padding: 60px 0;
+        }
+
+        .breadcrumbs {
+            margin-bottom: 30px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .breadcrumb-item {
+            display: inline-block;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: "/";
+            margin: 0 8px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .category-img {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .category-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .category-info h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        /* Category Listing Pages */
+        .category-listing {
+            padding: 60px 0;
+        }
+
+        .listing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .listing-title {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .sort-options {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sort-select {
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            background: white;
+        }
+
+        .listing-container {
+            display: flex;
+            gap: 30px;
+        }
+
+        .filters-sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .filter-section {
+            margin-bottom: 30px;
+        }
+
+        .filter-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-option input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .price-range {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .price-inputs input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .products-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .out-of-stock {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255,255,255,0.8);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .wishlist-btn:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-info h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .product-price {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .current-price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .discount {
+            background-color: #dc3545;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(112, 137, 147, 0.9) 0%, rgba(25, 24, 59, 0.9) 100%), url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        /* Store Locator Page */
+        .store-locator-page {
+            padding: 60px 0;
+        }
+
+        .stores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .store-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .store-card h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .store-address {
+            color: var(--gray);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .get-directions {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+        }
+
+        .form-group input {
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .terms {
+            font-size: 14px;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        .terms a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        /* Cart Page */
+        .cart-page {
+            padding: 60px 0;
+        }
+
+        .cart-items {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .cart-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            padding: 15px 10px;
+            border-bottom: 1px solid var(--light-gray);
+            font-weight: 600;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            padding: 15px 10px;
+            border-bottom: 1px solid var(--light-gray);
+            align-items: center;
+        }
+
+        .cart-item-details {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+        }
+
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .cart-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--light-gray);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px 0;
+        }
+
+        .total-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .checkout-section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .delivery-info {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .delivery-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .delivery-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .delivery-fee {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .payment-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        /* Wishlist Page */
+        .wishlist-page {
+            padding: 60px 0;
+        }
+
+        /* DesignBHK Style Section */
+        .designbhk-style {
+            padding: 60px 0;
+        }
+
+        .designbhk-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .designbhk-header h2 {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .designbhk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .designbhk-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .designbhk-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .designbhk-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .designbhk-info {
+            padding: 20px;
+        }
+
+        .designbhk-price {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 15px 0;
+        }
+
+        .designbhk-current-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .designbhk-original-price {
+            text-decoration: line-through;
+            color: var(--gray);
+            font-size: 16px;
+        }
+
+        .designbhk-discount {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 70px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 15px;
+        }
+
+        .footer-column ul li a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column ul li a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #adb5bd;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .listing-container {
+                flex-direction: column;
+            }
+            
+            .filters-sidebar {
+                width: 100%;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            .search-bar {
+                order: 3;
+                width: 100%;
+                max-width: none;
+                margin: 15px 0 0;
+            }
+            
+            .header-actions {
+                order: 2;
+                width: 100%;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            
+            .hero {
+                padding: 60px 0;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .section-title h2 {
+                font-size: 30px;
+            }
+            
+            .listing-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .cart-header, .cart-item {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .section-title h2 {
+                font-size: 26px;
+            }
+            
+            .cta h2 {
+                font-size: 32px;
+            }
+            
+            .cta p {
+                font-size: 18px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cart-header, .cart-item {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-top">
+            Fast Delivery Across Hyderabad | 1-4 Hours | ₹100 per order
+        </div>
+        <div class="container header-container">
+            <a href="#homePage" class="logo" style="text-decoration: none;">
+                <i class="fas fa-home"></i>
+                <h1>DesignBHK</h1>
+            </a>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for products or services...">
+            </div>
+            <div class="header-actions">
+                <select class="language-switcher" id="languageSwitcher">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="te">Telugu</option>
+                </select>
+                <button class="header-btn" id="locatorBtn">
+                    <i class="fas fa-map-marker-alt"></i> Store Locator
+                </button>
+                <button class="header-btn wishlist-icon" id="wishlistBtn">
+                    <i class="far fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </button>
+                <button class="header-btn cart-icon" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="header-btn" id="accountBtn">
+                    <i class="fas fa-user"></i> Account
+                </button>
+            </div>
+        </div>
+        <div class="main-nav">
+            <div class="container nav-container">
+                <div class="nav-item">
+                    <a href="#construction-listing" class="nav-link">Home Construction</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#architects-listing" class="nav-link">Designs</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#architects-listing" class="nav-link">Architects</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#experience-listing" class="nav-link">Experience Centres</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#hire-expert-listing" class="nav-link">Hire an Expert</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#categoriesPage" class="nav-link">Shop</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeLoginModal">&times;</span>
+            <h2 class="modal-title">Login to Your Account</h2>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="mobileNumber">Mobile Number</label>
+                    <input type="tel" id="mobileNumber" placeholder="Enter your mobile number" required>
+                </div>
+                <div class="form-group">
+                    <label for="otp">OTP</label>
+                    <input type="text" id="otp" placeholder="Enter OTP" disabled>
+                    <button type="button" id="sendOtp" class="btn btn-primary" style="margin-top: 10px;">Send OTP</button>
+                </div>
+                <button type="submit" class="btn btn-primary" disabled>Verify & Continue</button>
+            </form>
+            <p class="terms">By continuing, you agree to our <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div id="homePage">
+             <!-- Hero Section -->
+            <section class="hero">
+                <div class="container hero-content">
+                    <h1>Transform Your Home with Top Professionals & Quality Products</h1>
+                    <p>Your one-stop marketplace for home construction, design, and renovation needs</p>
+                    <div class="hero-buttons">
+                        <a href="#hire-expert-listing" class="btn btn-primary">Find an Expert</a>
+                        <a href="#categoriesPage" class="btn btn-outline">Shop Products</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Categories -->
+            <section class="featured-categories" style="padding: 60px 0;">
+                <div class="container">
+                    <div class="designbhk-header">
+                        <h2>Explore Our Categories</h2>
+                        <p>Find everything you need for your home in one place.</p>
+                    </div>
+                    <div class="category-grid">
+                        <a href="#construction-listing" class="category-card">
+                            <div class="category-img" style="background-image: url('https://placehold.co/600x400/708993/ffffff?text=Construction');"></div>
+                            <div class="category-info"><h3>Home Construction</h3></div>
+                        </a>
+                        <a href="#architects-listing" class="category-card">
+                            <div class="category-img" style="background-image: url('https://placehold.co/600x400/A1C2BD/ffffff?text=Designs');"></div>
+                            <div class="category-info"><h3>Designs & Architects</h3></div>
+                        </a>
+                        <a href="#categoriesPage" class="category-card">
+                            <div class="category-img" style="background-image: url('https://placehold.co/600x400/E7F2EF/19183B?text=Shop');"></div>
+                            <div class="category-info"><h3>Shop Materials</h3></div>
+                        </a>
+                        <a href="#hire-expert-listing" class="category-card">
+                            <div class="category-img" style="background-image: url('https://placehold.co/600x400/19183B/ffffff?text=Experts');"></div>
+                            <div class="category-info"><h3>Hire an Expert</h3></div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Choose Us Section -->
+            <section class="why-choose-us" style="padding: 60px 0; background-color: var(--light);">
+                <div class="container">
+                    <div class="designbhk-header">
+                        <h2>Why DesignBHK?</h2>
+                        <p>Your trusted partner for quality, reliability, and expertise.</p>
+                    </div>
+                    <div class="why-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; text-align: center;">
+                        <div class="why-card" style="background: white; padding: 30px; border-radius: 8px; box-shadow: var(--shadow);">
+                            <i class="fas fa-users" style="font-size: 40px; color: var(--primary); margin-bottom: 15px;"></i>
+                            <h3>Verified Professionals</h3>
+                            <p>Connect with vetted and experienced architects, designers, and contractors.</p>
+                        </div>
+                        <div class="why-card" style="background: white; padding: 30px; border-radius: 8px; box-shadow: var(--shadow);">
+                            <i class="fas fa-check-circle" style="font-size: 40px; color: var(--primary); margin-bottom: 15px;"></i>
+                            <h3>Quality Products</h3>
+                            <p>Shop from a curated selection of high-quality construction materials and decor.</p>
+                        </div>
+                        <div class="why-card" style="background: white; padding: 30px; border-radius: 8px; box-shadow: var(--shadow);">
+                            <i class="fas fa-truck-fast" style="font-size: 40px; color: var(--primary); margin-bottom: 15px;"></i>
+                            <h3>Fast & Reliable Delivery</h3>
+                            <p>Get materials delivered to your doorstep in Hyderabad within 1-4 hours.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Services Section -->
+            <section class="designbhk-style" id="designbhk-architects">
+                <div class="container">
+                    <div class="designbhk-header">
+                        <h2>Featured Designs & Services</h2>
+                        <p>Transform your space with our most popular expert designs</p>
+                    </div>
+                    <div class="designbhk-grid">
+                        <div class="designbhk-card">
+                            <div class="designbhk-img" style="background-image: url('https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=2070&auto=format&fit=crop');"></div>
+                            <div class="designbhk-info">
+                                <h3>Modern Living Room Design</h3>
+                                <div class="designbhk-price">
+                                    <div class="price-row">
+                                        <span class="designbhk-current-price">₹20,000</span>
+                                        <span class="designbhk-original-price">₹30,000</span>
+                                    </div>
+                                    <span class="designbhk-discount">33% OFF</span>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                        <div class="designbhk-card">
+                            <div class="designbhk-img" style="background-image: url('https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=2070&auto=format&fit=crop');"></div>
+                            <div class="designbhk-info">
+                                <h3>Contemporary Kitchen Design</h3>
+                                <div class="designbhk-price">
+                                    <div class="price-row">
+                                        <span class="designbhk-current-price">₹25,000</span>
+                                        <span class="designbhk-original-price">₹35,000</span>
+                                    </div>
+                                    <span class="designbhk-discount">29% OFF</span>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                        <div class="designbhk-card">
+                            <div class="designbhk-img" style="background-image: url('https://images.unsplash.com/photo-1595155682022-2288a6b5f923?q=80&w=1932&auto=format&fit=crop');"></div>
+                            <div class="designbhk-info">
+                                <h3>Luxury Bedroom Design</h3>
+                                <div class="designbhk-price">
+                                    <div class="price-row">
+                                        <span class="designbhk-current-price">₹25,000</span>
+                                        <span class="designbhk-original-price">₹45,000</span>
+                                    </div>
+                                    <span class="designbhk-discount">44% OFF</span>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                         <div class="designbhk-card">
+                            <div class="designbhk-img" style="background-image: url('https://images.unsplash.com/photo-1596796643949-6a3f9a2d6a54?q=80&w=1974&auto=format&fit=crop');"></div>
+                            <div class="designbhk-info">
+                                <h3>Minimalist Office Design</h3>
+                                <div class="designbhk-price">
+                                    <div class="price-row">
+                                        <span class="designbhk-current-price">₹40,000</span>
+                                        <span class="designbhk-original-price">₹55,000</span>
+                                    </div>
+                                    <span class="designbhk-discount">27% OFF</span>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- CTA Section -->
+            <section class="cta-section" style="background: linear-gradient(135deg, rgba(161, 194, 189, 0.95) 0%, rgba(112, 137, 147, 0.95) 100%); color: var(--dark); padding: 80px 0; text-align: center;">
+                <div class="container">
+                    <h2 style="font-size: 36px; margin-bottom: 20px;">Ready to Build Your Dream Home?</h2>
+                    <p style="font-size: 18px; max-width: 600px; margin: 0 auto 30px; opacity: 0.9;">Let our experts guide you from concept to completion. Get a free consultation today!</p>
+                    <a href="#hire-expert-listing" class="btn btn-primary" style="font-size: 18px; padding: 15px 35px; background-color: white; color: var(--dark);">Get a Free Quote</a>
+                </div>
+            </section>
+        </div>
+
+        <!-- Categories Page -->
+        <section class="categories-page" id="categoriesPage" style="display: none;">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <span class="breadcrumb-item">Home</span>
+                    <span class="breadcrumb-item">Categories</span>
+                </div>
+                <div class="category-grid">
+                    <a href="#architects-listing" class="category-card">
+                        <div class="category-img" style="background-image: url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=2070&auto=format&fit=crop');"></div>
+                        <div class="category-info">
+                            <h3>Architects & Interior Designers</h3>
+                        </div>
+                    </a>
+                    <a href="#experience-listing" class="category-card">
+                        <div class="category-img" style="background-image: url('https://images.unsplash.com/photo-1588854337236-6889d631f375?q=80&w=2070&auto=format&fit=crop');"></div>
+                        <div class="category-info">
+                            <h3>Experience Centres</h3>
+                        </div>
+                    </a>
+                    <a href="#construction-listing" class="category-card">
+                        <div class="category-img" style="background-image: url('https://images.unsplash.com/photo-1572949645841-094f3a9c4c94?q=80&w=1974&auto=format&fit=crop');"></div>
+                        <div class="category-info">
+                            <h3>Home Construction</h3>
+                        </div>
+                    </a>
+                    <a href="#designbhk-shop" class="category-card">
+                        <div class="category-img" style="background-image: url('https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?q=80&w=1974&auto=format&fit=crop');"></div>
+                        <div class="category-info">
+                            <h3>Shop</h3>
+                        </div>
+                    </a>
+                    <a href="#hire-expert-listing" class="category-card">
+                        <div class="category-img" style="background-image: url('https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=2070&auto=format&fit=crop');"></div>
+                        <div class="category-info">
+                            <h3>Hire an Expert</h3>
+                        </div>
+                    </a>
+                    <a href="#architects-listing" class="category-card">
+                        <div class="category-img" style="background-image: url('https://images.unsplash.com/photo-1604328698692-f04ea9458249?q=80&w=2070&auto=format&fit=crop');"></div>
+                        <div class="category-info">
+                            <h3>Home Automation</h3>
+                        </div>
+                    </a>
+                    <a href="#architects-listing" class="category-card">
+                        <div class="category-img" style="background-image: url('https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop');"></div>
+                        <div class="category-info">
+                            <h3>Designs</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architects & Interior Designers Listing Page -->
+        <section class="category-listing" id="architects-listing" style="display: none;">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <span class="breadcrumb-item">Home</span>
+                    <span class="breadcrumb-item">Categories</span>
+                    <span class="breadcrumb-item">Architects & Interior Designers</span>
+                </div>
+                <div class="listing-header">
+                    <h2 class="listing-title">Architects & Interior Designers (24)</h2>
+                    <div class="sort-options">
+                        <label for="sortSelect">Sort by:</label>
+                        <select class="sort-select" id="sortSelectArchitects">
+                            <option>Featured</option>
+                            <option>Discount</option>
+                            <option>Price low to high</option>
+                            <option>Price high to low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="listing-container">
+                    <div class="filters-sidebar">
+                        <div class="filter-section">
+                            <h3 class="filter-title">Project</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox"> Hallmark
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> MyHome
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> DreamSpaces
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> UrbanHomes
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-section">
+                            <h3 class="filter-title">Theme</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox"> Minimalistic
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Tropical
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Modern
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Traditional
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-section">
+                            <h3 class="filter-title">City</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox"> Hyderabad
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Secunderabad
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Gachibowli
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Hitech City
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-section">
+                            <h3 class="filter-title">Price Range</h3>
+                            <div class="price-range">
+                                <div class="price-inputs">
+                                    <input type="number" placeholder="Min" min="0">
+                                    <input type="number" placeholder="Max">
+                                </div>
+                                <button class="btn btn-outline">Apply</button>
+                            </div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="btn btn-outline">Clear All</button>
+                            <button class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=2070&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Modern Living Room Design</h3>
+                                <p>Contemporary design with premium finishes</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹20,000</span>
+                                        <span class="original-price">₹30,000</span>
+                                        <span class="discount">33% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=2070&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Contemporary Kitchen Design</h3>
+                                <p>Modern kitchen with smart storage solutions</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹25,000</span>
+                                        <span class="original-price">₹35,000</span>
+                                        <span class="discount">29% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1595155682022-2288a6b5f923?q=80&w=1932&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Luxury Bedroom Design</h3>
+                                <p>Elegant bedroom with custom furniture</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹25,000</span>
+                                        <span class="original-price">₹45,000</span>
+                                        <span class="discount">44% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1596796643949-6a3f9a2d6a54?q=80&w=1974&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Minimalist Office Design</h3>
+                                <p>Clean, functional workspace design</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹40,000</span>
+                                        <span class="original-price">₹55,000</span>
+                                        <span class="discount">27% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Centres Listing Page -->
+        <section class="category-listing" id="experience-listing" style="display: none;">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <span class="breadcrumb-item">Home</span>
+                    <span class="breadcrumb-item">Categories</span>
+                    <span class="breadcrumb-item">Experience Centres</span>
+                </div>
+                <div class="listing-header">
+                    <h2 class="listing-title">Experience Centres (6)</h2>
+                    <div class="sort-options">
+                        <label for="sortSelect">Sort by:</label>
+                        <select class="sort-select" id="sortSelectExperience">
+                            <option>Featured</option>
+                            <option>Distance</option>
+                            <option>Rating</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="listing-container">
+                    <div class="filters-sidebar">
+                        <div class="filter-section">
+                            <h3 class="filter-title">Location</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox"> Bachupally
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Uppal
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Kompally
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Hitech City
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Gachibowli
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Kukatpally
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="btn btn-outline">Clear All</button>
+                            <button class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1567016376408-0226e4d0c1ea?q=80&w=1974&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Jubilee Hills Experience Centre</h3>
+                                <p>Road No. 36, Jubilee Hills, Hyderabad</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹5,000</span>
+                                        <span class="original-price">₹10,000</span>
+                                        <span class="discount">50% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-map-marker-alt"></i> Get Directions
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1556702585-66a9a8342123?q=80&w=1974&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Gachibowli Experience Centre</h3>
+                                <p>Near Gachibowli Stadium, Hyderabad</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹5,000</span>
+                                        <span class="original-price">₹10,000</span>
+                                        <span class="discount">50% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-map-marker-alt"></i> Get Directions
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=80&w=2070&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Hitech City Experience Centre</h3>
+                                <p>Near Cyber Towers, Hyderabad</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹5,000</span>
+                                        <span class="original-price">₹10,000</span>
+                                        <span class="discount">50% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-map-marker-alt"></i> Get Directions
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Home Construction Listing Page -->
+        <section class="category-listing" id="construction-listing" style="display: none;">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <span class="breadcrumb-item">Home</span>
+                    <span class="breadcrumb-item">Categories</span>
+                    <span class="breadcrumb-item">Home Construction</span>
+                </div>
+                <div class="listing-header">
+                    <h2 class="listing-title">Home Construction Services (18)</h2>
+                    <div class="sort-options">
+                        <label for="sortSelect">Sort by:</label>
+                        <select class="sort-select" id="sortSelectConstruction">
+                            <option>Featured</option>
+                            <option>Discount</option>
+                            <option>Price low to high</option>
+                            <option>Price high to low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="listing-container">
+                    <div class="filters-sidebar">
+                        <div class="filter-section">
+                            <h3 class="filter-title">Property Type</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox"> Villa
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Farm House
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Apartment
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Duplex
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Independent House
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-section">
+                            <h3 class="filter-title">Budget</h3>
+                            <div class="price-range">
+                                <div class="price-inputs">
+                                    <input type="number" placeholder="Min" min="0">
+                                    <input type="number" placeholder="Max">
+                                </div>
+                                <button class="btn btn-outline">Apply</button>
+                            </div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="btn btn-outline">Clear All</button>
+                            <button class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Villa Construction Package</h3>
+                                <p>Complete villa construction with premium finishes</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹20,999</span>
+                                        <span class="original-price">₹30,999</span>
+                                        <span class="discount">32% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Farm House Construction</h3>
+                                <p>Beautiful farm houses with modern amenities</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹41,999</span>
+                                        <span class="original-price">₹56,999</span>
+                                        <span class="discount">26% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1628592102751-ba834f691653?q=80&w=1935&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Apartment Renovation</h3>
+                                <p>Complete renovation of 2BHK apartments</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹20,000</span>
+                                        <span class="original-price">₹23,999</span>
+                                        <span class="discount">17% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=2070&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Duplex Home Construction</h3>
+                                <p>Modern duplex homes with contemporary design</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹20,000</span>
+                                        <span class="original-price">₹26,000</span>
+                                        <span class="discount">23% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> ADD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hire an Expert Listing Page -->
+        <section class="category-listing" id="hire-expert-listing" style="display: none;">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <span class="breadcrumb-item">Home</span>
+                    <span class="breadcrumb-item">Categories</span>
+                    <span class="breadcrumb-item">Hire an Expert</span>
+                </div>
+                <div class="listing-header">
+                    <h2 class="listing-title">Experts for Hire (32)</h2>
+                    <div class="sort-options">
+                        <label for="sortSelect">Sort by:</label>
+                        <select class="sort-select" id="sortSelectExpert">
+                            <option>Featured</option>
+                            <option>Rating</option>
+                            <option>Price low to high</option>
+                            <option>Price high to low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="listing-container">
+                    <div class="filters-sidebar">
+                        <div class="filter-section">
+                            <h3 class="filter-title">Expert Type</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox"> Project Manager
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Site Engineer
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Building Permissions
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Structural Engineer
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Vaastu Consultant
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> Interior Designer
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-section">
+                            <h3 class="filter-title">Experience</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox"> Less than 2 years
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> 2-5 years
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> 5-10 years
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox"> 10+ years
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="btn btn-outline">Clear All</button>
+                            <button class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?q=80&w=2070&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Rajesh Kumar</h3>
+                                <p>Project Manager with 12+ years experience</p>
+                                <div class="product-price">
+                                    <span class="current-price">₹2,500/day</span>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> HIRE
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1555952494-efd681c5e3f8?q=80&w=1974&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Ananya Sharma</h3>
+                                <p>Structural Engineer for residential projects</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹3,000/day</span>
+                                        <span class="original-price">₹3,500/day</span>
+                                        <span class="discount">14% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> HIRE
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1615875938734-a043de3f034a?q=80&w=1974&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Vaastu Master Ravi</h3>
+                                <p>Vaastu Consultant with 15+ years experience</p>
+                                <div class="product-price">
+                                    <span class="current-price">₹5,000/consultation</span>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> HIRE
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1600880292210-85938a987415?q=80&w=1974&auto=format&fit=crop');">
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="product-info">
+                                <h3>Priya Singh</h3>
+                                <p>Building Permissions Expert in Hyderabad</p>
+                                <div class="product-price">
+                                    <div class="price-row">
+                                        <span class="current-price">₹15,000/project</span>
+                                        <span class="original-price">₹20,000/project</span>
+                                        <span class="discount">25% OFF</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary add-to-cart">
+                                    <i class="fas fa-plus"></i> HIRE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Store Locator Page -->
+        <section class="store-locator-page" id="storeLocatorPage" style="display: none;">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <span class="breadcrumb-item">Home</span>
+                    <span class="breadcrumb-item">Store Locator</span>
+                </div>
+                <h2 class="listing-title">Find Our Experience Centres in Hyderabad</h2>
+                
+                <div id="map" style="height: 400px; border-radius: 10px; margin-bottom: 30px; box-shadow: var(--shadow);"></div>
+                
+                <div class="stores-grid">
+                    <div class="store-card">
+                        <h3>Empire Square Experience Centre</h3>
+                        <p class="store-address">Road No. 36, Jubilee Hills, Hyderabad, Telangana 500033</p>
+                        <a href="#" class="get-directions"><i class="fas fa-directions"></i> Get Directions</a>
+                    </div>
+                    <div class="store-card">
+                        <h3>Kondapur Experience Centre</h3>
+                        <p class="store-address">Near Kondapur Bus Stop, Kondapur, Hyderabad, Telangana 500084</p>
+                        <a href="#" class="get-directions"><i class="fas fa-directions"></i> Get Directions</a>
+                    </div>
+                    <div class="store-card">
+                        <h3>Goshamahal Experience Centre</h3>
+                        <p class="store-address">Near Charminar, Goshamahal, Hyderabad, Telangana 500012</p>
+                        <a href="#" class="get-directions"><i class="fas fa-directions"></i> Get Directions</a>
+                    </div>
+                    <div class="store-card">
+                        <h3>Kompally Experience Centre</h3>
+                        <p class="store-address">Near Kompally Bus Stop, Kompally, Hyderabad, Telangana 500100</p>
+                        <a href="#" class="get-directions"><i class="fas fa-directions"></i> Get Directions</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Page -->
+        <section class="cart-page" id="cartPage" style="display: none;">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <span class="breadcrumb-item">Home</span>
+                    <span class="breadcrumb-item">Cart</span>
+                </div>
+                <h2 class="listing-title">Your Shopping Cart</h2>
+                
+                <div class="cart-items">
+                    <div id="cart-header" class="cart-header">
+                        <div>Product</div>
+                        <div>Price</div>
+                        <div>Quantity</div>
+                        <div>Total</div>
+                    </div>
+                    <div id="cart-item-list">
+                        <!-- Cart items will be dynamically inserted here -->
+                    </div>
+                    <div id="empty-cart-message" style="text-align: center; padding: 50px; display: none;">
+                        <h3>Your cart is empty!</h3>
+                        <p style="color: var(--gray); margin-bottom: 20px;">Add items to see them here.</p>
+                        <a href="#categoriesPage" class="btn btn-primary">Shop Now</a>
+                    </div>
+                </div>
+                
+                <div class="cart-total" id="cart-total-section">
+                    <div class="total-amount" id="total-amount">Total: ₹0</div>
+                </div>
+                
+                <div class="checkout-section" id="checkout-section">
+                    <h3>Checkout</h3>
+                    <div class="delivery-info">
+                        <div class="delivery-title">Delivery Information</div>
+                        <div class="delivery-details">
+                            <div>Fast Delivery Across Hyderabad</div>
+                            <div class="delivery-fee">₹100 per order</div>
+                        </div>
+                        <div class="delivery-details">
+                            <div>Estimated Delivery Time</div>
+                            <div>1-4 Hours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-options">
+                        <h4>Payment Method</h4>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" checked>
+                            <span>Credit/Debit Card</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment">
+                            <span>UPI Payment</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment">
+                            <span>Net Banking</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment">
+                            <span>Cash on Delivery</span>
+                        </label>
+                    </div>
+                    
+                    <button class="btn btn-primary checkout-btn">Complete Purchase</button>
+                    
+                    <div style="text-align: center; margin-top: 20px; color: var(--gray);">
+                        Need help? Contact our customer support at <strong>(123) 456-7890</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wishlist Page -->
+        <section class="wishlist-page" id="wishlistPage" style="display: none;">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <span class="breadcrumb-item">Home</span>
+                    <span class="breadcrumb-item">Wishlist</span>
+                </div>
+                <h2 class="listing-title">Your Wishlist</h2>
+                
+                <div class="products-grid" id="wishlist-grid">
+                     <!-- Wishlist items will be dynamically inserted here -->
+                </div>
+                 <div id="empty-wishlist-message" style="text-align: center; padding: 50px; display: none;">
+                    <h3>Your wishlist is empty!</h3>
+                    <p style="color: var(--gray); margin-bottom: 20px;">Add items you love to see them here.</p>
+                    <a href="#categoriesPage" class="btn btn-primary">Discover Products</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>DesignBHK</h3>
+                    <p>Your trusted partner for home construction, design, and renovation. Connecting homeowners with top professionals and quality products.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Sanitary Ware</a></li>
+                        <li><a href="#">UPVC Windows & Doors</a></li>
+                        <li><a href="#">Flooring</a></li>
+                        <li><a href="#">Kitchen CounterTop</a></li>
+                        <li><a href="#">Paints</a></li>
+                        <li><a href="#">Ready Mix Concrete</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Our Stores</h3>
+                    <ul>
+                        <li><strong>Empire Square</strong><br>Road No. 36, Jubilee Hills, Hyderabad</li>
+                        <li><strong>Kondapur</strong><br>Near Kondapur Bus Stop, Hyderabad</li>
+                        <li><strong>Goshamahal</strong><br>Near Charminar, Hyderabad</li>
+                        <li><strong>Kompally</strong><br>Near Kompally Bus Stop, Hyderabad</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@designbhk.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sun: 9AM - 8PM</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Hyderabad, Telangana</li>
+                    </ul>
+                    <div style="margin-top: 20px;">
+                        <strong>Follow us:</strong>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 DesignBHK Marketplace. All rights reserved. | <a href="#" style="color: #adb5bd;">Terms and Conditions</a> | <a href="#" style="color: #adb5bd;">Privacy Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet.js JavaScript for Interactive Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        // State variables
+        let cartItems = [];
+        let wishlistItems = [];
+        let currentLanguage = 'en';
+        let map = null; // To keep track of the map instance
+
+        // Initialize function that runs after DOM loads
+        function initializeApp() {
+
+            // Cart button
+            const cartBtn = document.getElementById('cartBtn');
+            if (cartBtn) {
+                cartBtn.addEventListener('click', () => showPage('cartPage'));
+            }
+
+            // Wishlist button
+            const wishlistBtn = document.getElementById('wishlistBtn');
+            if (wishlistBtn) {
+                wishlistBtn.addEventListener('click', () => showPage('wishlistPage'));
+            }
+
+            // Account button
+            const accountBtn = document.getElementById('accountBtn');
+            if (accountBtn) {
+                accountBtn.addEventListener('click', () => {
+                    const loginModal = document.getElementById('loginModal');
+                    if (loginModal) {
+                        loginModal.style.display = 'flex';
+                    }
+                });
+            }
+
+            // Store locator button
+            const locatorBtn = document.getElementById('locatorBtn');
+            if (locatorBtn) {
+                locatorBtn.addEventListener('click', () => showPage('storeLocatorPage'));
+            }
+
+            // Language switcher
+            const languageSwitcher = document.getElementById('languageSwitcher');
+            if (languageSwitcher) {
+                languageSwitcher.addEventListener('change', function() {
+                    currentLanguage = this.value;
+                    const notification = document.createElement('div');
+                    notification.textContent = `Language changed to ${this.options[this.selectedIndex].text}`;
+                    Object.assign(notification.style, {
+                        position: 'fixed', top: '20px', right: '20px', backgroundColor: 'var(--primary)',
+                        color: 'white', padding: '10px 20px', borderRadius: '5px', zIndex: '3000',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+                    });
+                    document.body.appendChild(notification);
+                    setTimeout(() => document.body.removeChild(notification), 3000);
+                });
+            }
+            
+            // Modal handling
+            const loginModal = document.getElementById('loginModal');
+            const closeLoginModal = document.getElementById('closeLoginModal');
+            if (closeLoginModal) {
+                closeLoginModal.addEventListener('click', () => loginModal.style.display = 'none');
+            }
+            window.addEventListener('click', event => {
+                if (event.target === loginModal) loginModal.style.display = 'none';
+            });
+
+            // OTP Form
+            const sendOtpBtn = document.getElementById('sendOtp');
+            const mobileNumberInput = document.getElementById('mobileNumber');
+            const otpInput = document.getElementById('otp');
+            if (sendOtpBtn && mobileNumberInput) {
+                sendOtpBtn.addEventListener('click', () => {
+                    if (mobileNumberInput.value.trim() === '') {
+                        alert('Please enter your mobile number');
+                        return;
+                    }
+                    alert(`OTP sent to ${mobileNumberInput.value}`);
+                    if (otpInput) otpInput.disabled = false;
+                    const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+                    if (submitBtn) submitBtn.disabled = false;
+                });
+            }
+
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', e => {
+                    e.preventDefault();
+                    if (otpInput && otpInput.value.trim() === '') {
+                        alert('Please enter the OTP');
+                        return;
+                    }
+                    alert('Login successful!');
+                    if (loginModal) loginModal.style.display = 'none';
+                });
+            }
+
+            // Wishlist functionality
+            document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.product-card, .designbhk-card');
+                    if (!card) return;
+
+                    const name = card.querySelector('h3').textContent;
+                    const icon = this.querySelector('i');
+
+                    const itemIndex = wishlistItems.findIndex(item => item.name === name);
+
+                    if (itemIndex > -1) { // Item exists, so remove it
+                        wishlistItems.splice(itemIndex, 1);
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    } else { // Item doesn't exist, so add it
+                         const priceEl = card.querySelector('.current-price, .designbhk-current-price');
+                         const originalPriceEl = card.querySelector('.original-price, .designbhk-original-price');
+                         const discountEl = card.querySelector('.discount, .designbhk-discount');
+                         const descEl = card.querySelector('p');
+                         
+                         wishlistItems.push({
+                            name,
+                            price: priceEl ? priceEl.textContent : '',
+                            originalPrice: originalPriceEl ? originalPriceEl.textContent : '',
+                            discount: discountEl ? discountEl.textContent : '',
+                            description: descEl ? descEl.textContent : '',
+                            image: card.querySelector('.product-img, .designbhk-img').style.backgroundImage
+                         });
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    }
+                    updateWishlistCount();
+                    if(document.getElementById('wishlistPage').style.display === 'block'){
+                        renderWishlistPage();
+                    }
+                });
+            });
+
+            // Add to cart functionality
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.product-card, .designbhk-card');
+                    if (!card) return;
+
+                    const name = card.querySelector('h3').textContent;
+                    const priceString = card.querySelector('.current-price, .designbhk-current-price').textContent;
+                    const price = parseInt(priceString.replace(/[^0-9]/g, ''));
+                    
+                    let imageElement = card.querySelector('.product-img, .designbhk-img');
+                    const image = imageElement ? imageElement.style.backgroundImage : '';
+
+                    const existingItem = cartItems.find(item => item.name === name);
+                    if (existingItem) {
+                        existingItem.quantity++;
+                    } else {
+                        cartItems.push({ name, price, image, quantity: 1 });
+                    }
+                    
+                    updateCartCount();
+                    alert('Item added to cart!');
+                });
+            });
+
+            function updateCartCount() {
+                const cartCount = document.querySelector('.cart-count');
+                const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                if (cartCount) cartCount.textContent = totalItems;
+            }
+
+            function updateWishlistCount() {
+                const wishlistCount = document.querySelector('.wishlist-count');
+                if (wishlistCount) wishlistCount.textContent = wishlistItems.length;
+            }
+
+            updateCartCount();
+            updateWishlistCount();
+
+            // Checkout button
+            const checkoutBtn = document.querySelector('.checkout-btn');
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', () => {
+                    alert('Thank you for your purchase! Your order has been confirmed.');
+                    cartItems = [];
+                    updateCartCount();
+                    renderCartPage();
+                    showPage('homePage');
+                });
+            }
+
+            // Navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href').substring(1);
+                    if (targetId) {
+                        e.preventDefault();
+                        showPage(targetId);
+                    }
+                });
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-bar input');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && this.value.trim() !== '') {
+                        alert(`Searching for: ${this.value}`);
+                        this.value = '';
+                    }
+                });
+            }
+            
+            // Initial page load handler
+            const initialHash = window.location.hash.substring(1);
+            showPage(initialHash || 'homePage');
+            renderCartPage(); 
+            renderWishlistPage();
+        }
+
+        const allPageIds = [
+            'homePage', 'categoriesPage', 'architects-listing', 
+            'experience-listing', 'construction-listing', 'hire-expert-listing', 
+            'storeLocatorPage', 'cartPage', 'wishlistPage'
+        ];
+
+        function showPage(pageId, updateHash = true) {
+            allPageIds.forEach(id => {
+                const pageElement = document.getElementById(id);
+                if (pageElement) pageElement.style.display = 'none';
+            });
+            
+            const pageToShow = document.getElementById(pageId);
+            if (pageToShow) {
+                pageToShow.style.display = 'block';
+                if (pageId === 'cartPage') renderCartPage();
+                if (pageId === 'wishlistPage') renderWishlistPage();
+                if (pageId === 'storeLocatorPage') setTimeout(() => initializeMap(), 0);
+            } else {
+                document.getElementById('homePage').style.display = 'block';
+            }
+            
+            if (updateHash && window.location.hash !== `#${pageId}`) {
+                window.location.hash = pageId;
+            }
+            window.scrollTo(0, 0);
+        }
+
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1);
+            showPage(hash || 'homePage', false);
+        });
+
+        function initializeMap() {
+            if (map) { // If map is already initialized, just resize it.
+                map.invalidateSize();
+                return;
+            }
+            
+            map = L.map('map').setView([17.43, 78.44], 11); // Centered on Hyderabad
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            const stores = [
+                { name: "Empire Square Experience Centre", address: "Road No. 36, Jubilee Hills, Hyderabad", lat: 17.4375, lng: 78.3995 },
+                { name: "Kondapur Experience Centre", address: "Near Kondapur Bus Stop, Kondapur, Hyderabad", lat: 17.4641, lng: 78.3592 },
+                { name: "Goshamahal Experience Centre", address: "Near Charminar, Goshamahal, Hyderabad", lat: 17.3786, lng: 78.4682 },
+                { name: "Kompally Experience Centre", address: "Near Kompally Bus Stop, Kompally, Hyderabad", lat: 17.5255, lng: 78.4984 }
+            ];
+
+            stores.forEach(store => {
+                const marker = L.marker([store.lat, store.lng]).addTo(map);
+                marker.bindPopup(`<b>${store.name}</b><br>${store.address}<br><a href="https://www.google.com/maps?q=${store.lat},${store.lng}" target="_blank">Get Directions</a>`);
+            });
+        }
+        
+        function renderWishlistPage() {
+            const wishlistGrid = document.getElementById('wishlist-grid');
+            const emptyMessage = document.getElementById('empty-wishlist-message');
+            const wishlistTitle = document.querySelector('#wishlistPage .listing-title');
+            
+            if (!wishlistGrid || !emptyMessage || !wishlistTitle) return;
+            
+            wishlistGrid.innerHTML = '';
+            wishlistTitle.textContent = `Your Wishlist (${wishlistItems.length})`;
+
+            if (wishlistItems.length === 0) {
+                emptyMessage.style.display = 'block';
+                wishlistGrid.style.display = 'none';
+            } else {
+                emptyMessage.style.display = 'none';
+                wishlistGrid.style.display = 'grid';
+
+                wishlistItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <div class="product-img" style="background-image: ${item.image};">
+                            <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                        </div>
+                        <div class="product-info">
+                            <h3>${item.name}</h3>
+                            <p>${item.description || ''}</p>
+                            <div class="product-price">
+                                <div class="price-row">
+                                    <span class="current-price">${item.price}</span>
+                                    ${item.originalPrice ? `<span class="original-price">${item.originalPrice}</span>` : ''}
+                                    ${item.discount ? `<span class="discount">${item.discount}</span>` : ''}
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                <button class="btn btn-primary add-to-cart" style="flex: 1;">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                                <button class="btn btn-outline remove-wishlist" style="flex: 1;">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>`;
+                    wishlistGrid.appendChild(card);
+                });
+            }
+        }
+
+        function renderCartPage() {
+            const cartItemList = document.getElementById('cart-item-list');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+            const cartHeader = document.getElementById('cart-header');
+            const checkoutSection = document.getElementById('checkout-section');
+            const totalSection = document.getElementById('cart-total-section');
+            const totalAmountEl = document.getElementById('total-amount');
+
+            if (!cartItemList || !emptyCartMessage || !cartHeader || !checkoutSection) return;
+
+            cartItemList.innerHTML = '';
+
+            if (cartItems.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                cartHeader.style.display = 'none';
+                checkoutSection.style.display = 'none';
+                totalSection.style.display = 'none';
+            } else {
+                emptyCartMessage.style.display = 'none';
+                cartHeader.style.display = 'grid';
+                checkoutSection.style.display = 'flex';
+                totalSection.style.display = 'flex';
+
+                let totalCost = 0;
+                cartItems.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    totalCost += itemTotal;
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'cart-item';
+                    itemElement.innerHTML = `
+                        <div class="cart-item-details">
+                            <div class="cart-item-img" style="background-image: ${item.image || 'url(https://placehold.co/80x80/e9ecef/333333?text=N/A)'};"></div>
+                            <div class="cart-item-title">${item.name}</div>
+                        </div>
+                        <div class="cart-item-price">₹${item.price.toLocaleString('en-IN')}</div>
+                        <div class="cart-quantity">
+                            <button class="quantity-btn minus" data-index="${index}">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn plus" data-index="${index}">+</button>
+                        </div>
+                        <div class="cart-item-price">₹${itemTotal.toLocaleString('en-IN')}</div>
+                    `;
+                    cartItemList.appendChild(itemElement);
+                });
+                totalAmountEl.textContent = `Total: ₹${totalCost.toLocaleString('en-IN')}`;
+                
+                cartItemList.querySelectorAll('.quantity-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        const isPlus = this.classList.contains('plus');
+                        
+                        if(isPlus) {
+                            cartItems[index].quantity++;
+                        } else {
+                            cartItems[index].quantity--;
+                        }
+
+                        if (cartItems[index].quantity === 0) {
+                            cartItems.splice(index, 1);
+                        }
+                        
+                        updateCartCount();
+                        renderCartPage();
+                    });
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
+
